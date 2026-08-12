@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1"
+	/>
+
+	<title>XENEON EDGE Brightness</title>
+
+	<script src="sdpi-components.js"></script>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 16px;
+			font-family: Arial, sans-serif;
+			background: #1f1f1f;
+			color: #ffffff;
+		}
+
+		.header {
+			margin-bottom: 18px;
+		}
+
+		.title {
+			font-size: 16px;
+			font-weight: 700;
+			margin-bottom: 4px;
+		}
+
+		.subtitle {
+			font-size: 12px;
+			color: #b8b8b8;
+			line-height: 1.4;
+		}
+
+		.value-box {
+			margin-top: 14px;
+			text-align: center;
+			font-size: 28px;
+			font-weight: 700;
+			color: #ffc928;
+		}
+
+		.note {
+			margin-top: 14px;
+			font-size: 11px;
+			color: #9a9a9a;
+			line-height: 1.4;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header">
+		<div class="title">
+			Set Brightness
+		</div>
+
+		<div class="subtitle">
+			Choose the brightness level that this Stream Deck key should apply to your XENEON EDGE.
+		</div>
+	</div>
+
+	<sdpi-item label="Brightness">
+		<sdpi-range
+			id="brightness"
+			setting="targetBrightness"
+			min="0"
+			max="100"
+			step="1"
+			value="50"
+		>
+		</sdpi-range>
+	</sdpi-item>
+
+	<div
+		id="brightnessValue"
+		class="value-box"
+	>
+		50%
+	</div>
+
+	<div class="note">
+		Each Set Brightness key stores its own value independently.
+	</div>
+
+	<script>
+		const { streamDeckClient } = SDPIComponents;
+
+		const brightnessRange =
+			document.getElementById("brightness");
+
+		const brightnessValue =
+			document.getElementById("brightnessValue");
+
+		function clampBrightness(value) {
+			const parsed =
+				Number.parseInt(value, 10);
+
+			if (Number.isNaN(parsed)) {
+				return 50;
+			}
+
+			return Math.max(
+				0,
+				Math.min(100, parsed)
+			);
+		}
+
+		function updateDisplayedValue(value) {
+			const safeValue =
+				clampBrightness(value);
+
+			brightnessValue.textContent =
+				`${safeValue}%`;
+		}
+
+		brightnessRange.addEventListener(
+			"input",
+			(event) => {
+				updateDisplayedValue(
+					event.target.value
+				);
+			}
+		);
+
+		brightnessRange.addEventListener(
+			"change",
+			async (event) => {
+				const targetBrightness =
+					clampBrightness(
+						event.target.value
+					);
+
+				updateDisplayedValue(
+					targetBrightness
+				);
+
+				await streamDeckClient.setSettings({
+					targetBrightness
+				});
+			}
+		);
+
+		streamDeckClient.didReceiveSettings.subscribe(
+			(event) => {
+				const targetBrightness =
+					clampBrightness(
+						event?.payload?.settings
+							?.targetBrightness ?? 50
+					);
+
+				brightnessRange.value =
+					String(targetBrightness);
+
+				updateDisplayedValue(
+					targetBrightness
+				);
+			}
+		);
+	</script>
+</body>
+</html>

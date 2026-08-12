@@ -1,49 +1,112 @@
 {
-    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
-    "Name": "XENEON EDGE Power",
-    "Version": "1.0.0.0",
-    "Author": "MarshallB",
-    "Actions": [
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+
+  "Name": "XENEON EDGE Power",
+  "Version": "1.1.0.0",
+  "Author": "MarshallB",
+
+  "Actions": [
+    {
+      "Name": "Power Toggle",
+      "UUID": "com.marshallb.xeneon-edge-power.power-toggle",
+      "Icon": "imgs/actions/power/icon",
+      "Tooltip": "Turn your XENEON EDGE monitor on or off.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "DisableAutomaticStates": true,
+      "States": [
         {
-            "Name": "Power Toggle",
-            "UUID": "com.marshallb.xeneon-edge-power.power-toggle",
-            "Icon": "imgs/actions/power/icon",
-            "Tooltip": "Turn your XENEON EDGE monitor on or off.",
-            "Controllers": [
-                "Keypad"
-            ],
-            "DisableAutomaticStates": true,
-            "States": [
-                {
-                    "Name": "On",
-                    "Image": "imgs/actions/power/key-on",
-                    "TitleAlignment": "middle"
-                },
-                {
-                    "Name": "Off",
-                    "Image": "imgs/actions/power/key-off",
-                    "TitleAlignment": "middle"
-                }
-            ]
-        }
-    ],
-    "Category": "XENEON EDGE Power",
-    "CategoryIcon": "imgs/plugin/category-icon",
-    "CodePath": "bin/plugin.js",
-    "Description": "Control the power state of your XENEON EDGE monitor directly from Stream Deck using DDC/CI.",
-    "Icon": "imgs/plugin/marketplace",
-    "SDKVersion": 3,
-    "Software": {
-        "MinimumVersion": "7.1"
-    },
-    "OS": [
+          "Name": "On",
+          "Image": "imgs/actions/power/key-on",
+          "TitleAlignment": "middle"
+        },
         {
-            "Platform": "windows",
-            "MinimumVersion": "10"
+          "Name": "Off",
+          "Image": "imgs/actions/power/key-off",
+          "TitleAlignment": "middle"
         }
-    ],
-    "Nodejs": {
-        "Version": "24"
+      ]
     },
-    "UUID": "com.marshallb.xeneon-edge-power"
+
+    {
+      "Name": "Brightness +",
+      "UUID": "com.marshallb.xeneon-edge-power.brightness-up",
+      "Icon": "imgs/actions/brightness-up/icon",
+      "Tooltip": "Increase XENEON EDGE brightness by 10%.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Name": "Brightness Up",
+          "Image": "imgs/actions/brightness-up/icon",
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+
+    {
+      "Name": "Brightness -",
+      "UUID": "com.marshallb.xeneon-edge-power.brightness-down",
+      "Icon": "imgs/actions/brightness-down/icon",
+      "Tooltip": "Decrease XENEON EDGE brightness by 10%.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Name": "Brightness Down",
+          "Image": "imgs/actions/brightness-down/icon",
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+
+    {
+      "Name": "Set Brightness",
+      "UUID": "com.marshallb.xeneon-edge-power.set-brightness",
+      "Icon": "imgs/actions/set-brightness/icon",
+      "Tooltip": "Set XENEON EDGE brightness to a specific level.",
+      "PropertyInspectorPath": "ui/set-brightness.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Name": "Set Brightness",
+          "Image": "imgs/actions/set-brightness/icon",
+          "TitleAlignment": "middle"
+        }
+      ]
+    }
+  ],
+
+  "Category": "XENEON EDGE Power",
+  "CategoryIcon": "imgs/plugin/category-icon",
+
+  "CodePath": "bin/plugin.js",
+
+  "Description": "Control the power and brightness of your XENEON EDGE monitor directly from Stream Deck using DDC/CI.",
+
+  "Icon": "imgs/plugin/marketplace",
+
+  "SDKVersion": 3,
+
+  "Software": {
+    "MinimumVersion": "7.1"
+  },
+
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+
+  "Nodejs": {
+    "Version": "24"
+  },
+
+  "UUID": "com.marshallb.xeneon-edge-power"
 }
