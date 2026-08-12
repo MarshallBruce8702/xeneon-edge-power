@@ -8,6 +8,24 @@ No PowerShell scripts, BAT files, Twinkle Tray, or manual monitor IDs are requir
 
 ---
 
+## Power States
+
+<p align="center">
+  <img src="com.marshallb.xeneon-edge-power.sdPlugin/imgs/actions/Power/key-on@2x.png" width="180" alt="XENEON EDGE ON">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="com.marshallb.xeneon-edge-power.sdPlugin/imgs/actions/Power/key-off@2x.png" width="180" alt="XENEON EDGE OFF">
+</p>
+
+<p align="center">
+  <strong>EDGE ON</strong>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <strong>EDGE OFF</strong>
+</p>
+
+Press one Stream Deck key to toggle your XENEON EDGE between ON and OFF. The button automatically changes its state to reflect the monitor's power status.
+
+---
+
 ## Features
 
 - Turn the XENEON EDGE ON and OFF directly from Stream Deck.
@@ -39,23 +57,25 @@ The current release is designed for Windows.
 
 ## Installation
 
-1. Download the latest:
+1. Go to the latest GitHub Release.
+
+2. Download:
 
    `com.marshallb.xeneon-edge-power.streamDeckPlugin`
 
-2. Double-click the downloaded file.
+3. Double-click the downloaded file.
 
-3. Stream Deck will ask you to install:
-
-   **XENEON EDGE Power**
-
-4. Open the Stream Deck application.
-
-5. Find:
+4. Stream Deck will ask you to install:
 
    **XENEON EDGE Power**
 
-6. Drag the **Power Toggle** action onto a Stream Deck key.
+5. Open the Stream Deck application.
+
+6. Find:
+
+   **XENEON EDGE Power**
+
+7. Drag the **Power Toggle** action onto a Stream Deck key.
 
 That's it.
 
@@ -144,3 +164,97 @@ Install dependencies:
 
 ```powershell
 npm install
+```
+
+Build the plugin:
+
+```powershell
+npm run build
+```
+
+Validate the plugin:
+
+```powershell
+streamdeck validate ".\com.marshallb.xeneon-edge-power.sdPlugin"
+```
+
+Package the plugin:
+
+```powershell
+streamdeck pack ".\com.marshallb.xeneon-edge-power.sdPlugin"
+```
+
+To overwrite an existing package:
+
+```powershell
+streamdeck pack ".\com.marshallb.xeneon-edge-power.sdPlugin" --force
+```
+
+---
+
+## Platform Support
+
+### Windows
+
+Supported.
+
+### macOS
+
+Not currently supported.
+
+The native DDC/CI component included with this release is built for Windows.
+
+---
+
+## Troubleshooting
+
+### XENEON EDGE is not detected
+
+Make sure:
+
+- The monitor is connected to Windows.
+- DDC/CI communication is available.
+- The monitor is recognized correctly by Windows.
+- You are using a supported XENEON EDGE device.
+
+### Button displays EDGE ?
+
+The plugin was unable to read the monitor's current power state.
+
+Restart Stream Deck and verify that the XENEON EDGE is connected.
+
+### Button displays EDGE ERROR
+
+The plugin encountered an error while attempting to communicate with the monitor.
+
+Verify that the XENEON EDGE is connected and accessible through DDC/CI.
+
+---
+
+## Version
+
+**XENEON EDGE Power v1.0.0**
+
+---
+
+## Disclaimer
+
+This is an independent community project.
+
+This project is not affiliated with, endorsed by, sponsored by, or officially supported by CORSAIR or Elgato.
+
+CORSAIR, XENEON, XENEON EDGE, Elgato, and Stream Deck are trademarks of their respective owners.
+
+Use this software at your own risk.
+
+---
+
+## Author
+
+**MarshallB**
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
