@@ -1,5 +1,11 @@
 # XENEON EDGE Power
 
+[![Release](https://img.shields.io/badge/release-v1.0.0-blue.svg)](https://github.com/MarshallBruce8702/xeneon-edge-power/releases/tag/v1.0.0)
+![Platform](https://img.shields.io/badge/platform-Windows-0078D6.svg)
+![Stream Deck](https://img.shields.io/badge/Stream%20Deck-7.1%2B-00AEEF.svg)
+![DDC/CI](https://img.shields.io/badge/DDC%2FCI-supported-success.svg)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Control the power state of your **CORSAIR XENEON EDGE** monitor directly from an **Elgato Stream Deck**.
 
 XENEON EDGE Power provides a simple ON/OFF toggle button that communicates directly with the monitor through **DDC/CI**.
@@ -28,28 +34,28 @@ Press one Stream Deck key to toggle your XENEON EDGE between ON and OFF. The but
 
 ## Features
 
-- Turn the XENEON EDGE ON and OFF directly from Stream Deck.
-- Automatic XENEON EDGE detection.
-- Uses DDC/CI directly.
-- Reads the real power state of the monitor.
-- Green ON state.
-- Red OFF state.
-- Automatically keeps the Stream Deck button synchronized with the monitor.
-- Does not require Twinkle Tray.
-- Does not require PowerShell scripts.
-- Does not require BAT files.
-- Does not require Node.js on the user's PC.
-- Works after Windows restart.
-- Lightweight native Stream Deck plugin.
+* Turn the XENEON EDGE ON and OFF directly from Stream Deck.
+* Automatic XENEON EDGE detection.
+* Uses DDC/CI directly.
+* Reads the real power state of the monitor.
+* Green ON state.
+* Red OFF state.
+* Automatically keeps the Stream Deck button synchronized with the monitor.
+* Does not require Twinkle Tray.
+* Does not require PowerShell scripts.
+* Does not require BAT files.
+* Does not require Node.js on the user's PC.
+* Works after Windows restart.
+* Lightweight native Stream Deck plugin.
 
 ---
 
 ## Requirements
 
-- Windows 10 or Windows 11
-- Elgato Stream Deck software 7.1 or newer
-- CORSAIR XENEON EDGE
-- DDC/CI enabled and available for the monitor
+* Windows 10 or Windows 11
+* Elgato Stream Deck software 7.1 or newer
+* CORSAIR XENEON EDGE
+* DDC/CI enabled and available for the monitor
 
 The current release is designed for Windows.
 
@@ -113,9 +119,9 @@ The plugin detects the XENEON EDGE and controls its power state using the monito
 
 The plugin currently uses:
 
-- VCP Code: `0xD6`
-- ON value: `1`
-- OFF value: `5`
+* VCP Code: `0xD6`
+* ON value: `1`
+* OFF value: `5`
 
 The plugin also reads the current VCP value so the Stream Deck button can reflect the actual monitor state.
 
@@ -127,10 +133,10 @@ The plugin automatically identifies the XENEON EDGE using its display hardware i
 
 Users do not need to determine or configure:
 
-- Monitor numbers
-- Windows display numbers
-- UID values
-- DDC/CI monitor paths
+* Monitor numbers
+* Windows display numbers
+* UID values
+* DDC/CI monitor paths
 
 ---
 
@@ -140,10 +146,10 @@ The plugin includes the native components required for DDC/CI communication.
 
 The distributed Stream Deck plugin includes:
 
-- `@hensm/ddcci`
-- `bindings`
-- `file-uri-to-path`
-- Native `ddcci.node` module
+* `@hensm/ddcci`
+* `bindings`
+* `file-uri-to-path`
+* Native `ddcci.node` module
 
 Users do not need to install these dependencies manually.
 
@@ -155,10 +161,10 @@ Users do not need to install these dependencies manually.
 
 For development:
 
-- Node.js 24+
-- npm
-- Elgato Stream Deck CLI
-- Visual Studio Code or another code editor
+* Node.js 24+
+* npm
+* Elgato Stream Deck CLI
+* Visual Studio Code or another code editor
 
 Install dependencies:
 
@@ -212,10 +218,10 @@ The native DDC/CI component included with this release is built for Windows.
 
 Make sure:
 
-- The monitor is connected to Windows.
-- DDC/CI communication is available.
-- The monitor is recognized correctly by Windows.
-- You are using a supported XENEON EDGE device.
+* The monitor is connected to Windows.
+* DDC/CI communication is available.
+* The monitor is recognized correctly by Windows.
+* You are using a supported XENEON EDGE device.
 
 ### Button displays EDGE ?
 
