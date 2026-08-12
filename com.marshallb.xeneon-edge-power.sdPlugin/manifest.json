@@ -97,6 +97,40 @@
           "TitleAlignment": "middle"
         }
       ]
+    },
+
+    {
+      "Name": "Power ON",
+      "UUID": "com.marshallb.xeneon-edge-power.power-on",
+      "Icon": "imgs/actions/power-on/icon",
+      "Tooltip": "Turn the XENEON EDGE monitor on.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Name": "Power On",
+          "Image": "imgs/actions/power/key-on",
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+
+    {
+      "Name": "Power OFF",
+      "UUID": "com.marshallb.xeneon-edge-power.power-off",
+      "Icon": "imgs/actions/power-off/icon",
+      "Tooltip": "Turn the XENEON EDGE monitor off.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Name": "Power Off",
+          "Image": "imgs/actions/power/key-off",
+          "TitleAlignment": "middle"
+        }
+      ]
     }
   ],
 

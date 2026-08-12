@@ -21,9 +21,9 @@ import {
 } from "../services/power-ui";
 
 @action({
-	UUID: "com.marshallb.xeneon-edge-power.power-toggle",
+	UUID: "com.marshallb.xeneon-edge-power.power-off",
 })
-export class XeneonEdgePower extends SingletonAction {
+export class XeneonEdgePowerOff extends SingletonAction {
 
 	override async onWillAppear(
 		ev: WillAppearEvent
@@ -32,7 +32,7 @@ export class XeneonEdgePower extends SingletonAction {
 
 		registerPowerKey(
 			key,
-			"toggle"
+			"off"
 		);
 
 		try {
@@ -49,7 +49,7 @@ export class XeneonEdgePower extends SingletonAction {
 			);
 
 			await key.setTitle(
-				"EDGE\n?"
+				"POWER\n?"
 			);
 		}
 	}
@@ -73,26 +73,23 @@ export class XeneonEdgePower extends SingletonAction {
 			const currentState =
 				getPowerState();
 
-			const nextState =
-				currentState === POWER_ON
-					? POWER_OFF
-					: POWER_ON;
-
-			setPowerState(
-				nextState
-			);
+			if (currentState !== POWER_OFF) {
+				setPowerState(
+					POWER_OFF
+				);
+			}
 
 			await syncPowerKeys(
-				nextState === POWER_ON
+				false
 			);
 		} catch (error) {
 			console.error(
-				"Unable to change XENEON EDGE power state:",
+				"Unable to turn off XENEON EDGE:",
 				error
 			);
 
 			await key.setTitle(
-				"EDGE\nERROR"
+				"POWER\nERROR"
 			);
 
 			await key.showAlert();
