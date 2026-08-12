@@ -2,6 +2,11 @@ import type { KeyAction } from "@elgato/streamdeck";
 
 type BrightnessDirection = "up" | "down";
 
+type BrightnessToggleConfig = {
+	brightnessA: number;
+	brightnessB: number;
+};
+
 const brightnessKeys = new Map<
 	KeyAction,
 	BrightnessDirection
@@ -10,6 +15,11 @@ const brightnessKeys = new Map<
 const setBrightnessKeys = new Map<
 	KeyAction,
 	number
+>();
+
+const brightnessToggleKeys = new Map<
+	KeyAction,
+	BrightnessToggleConfig
 >();
 
 export function registerBrightnessKey(
@@ -42,6 +52,48 @@ export function unregisterSetBrightnessKey(
 	key: KeyAction
 ): void {
 	setBrightnessKeys.delete(key);
+}
+
+export function registerBrightnessToggleKey(
+	key: KeyAction,
+	brightnessA: number,
+	brightnessB: number
+): void {
+	brightnessToggleKeys.set(
+		key,
+		{
+			brightnessA,
+			brightnessB,
+		}
+	);
+}
+
+export function unregisterBrightnessToggleKey(
+	key: KeyAction
+): void {
+	brightnessToggleKeys.delete(key);
+}
+
+function getNextToggleBrightness(
+	currentBrightness: number,
+	brightnessA: number,
+	brightnessB: number
+): number {
+	const distanceToA =
+		Math.abs(
+			currentBrightness - brightnessA
+		);
+
+	const distanceToB =
+		Math.abs(
+			currentBrightness - brightnessB
+		);
+
+	if (distanceToA <= distanceToB) {
+		return brightnessB;
+	}
+
+	return brightnessA;
 }
 
 function createBrightnessSvg(
@@ -108,7 +160,6 @@ function createBrightnessSvg(
 		stroke-width="3"
 	/>
 
-	<!-- Sun -->
 	<g
 		stroke="#FFF9DA"
 		stroke-width="5"
@@ -135,7 +186,6 @@ function createBrightnessSvg(
 		<line x1="57" y1="56" x2="53" y2="60"/>
 	</g>
 
-	<!-- Percentage -->
 	<text
 		x="72"
 		y="91"
@@ -148,7 +198,6 @@ function createBrightnessSvg(
 		${brightness}%
 	</text>
 
-	<!-- Separator -->
 	<line
 		x1="27"
 		y1="101"
@@ -160,7 +209,6 @@ function createBrightnessSvg(
 		filter="url(#glow)"
 	/>
 
-	<!-- Plus / Minus -->
 	<text
 		x="72"
 		y="132"
@@ -233,7 +281,6 @@ function createSetBrightnessSvg(
 		stroke-width="3"
 	/>
 
-	<!-- Sun -->
 	<g
 		stroke="#FFF9DA"
 		stroke-width="5"
@@ -260,7 +307,6 @@ function createSetBrightnessSvg(
 		<line x1="57" y1="56" x2="53" y2="60"/>
 	</g>
 
-	<!-- Target Percentage -->
 	<text
 		x="72"
 		y="91"
@@ -273,7 +319,6 @@ function createSetBrightnessSvg(
 		${targetBrightness}%
 	</text>
 
-	<!-- Separator -->
 	<line
 		x1="27"
 		y1="101"
@@ -285,7 +330,6 @@ function createSetBrightnessSvg(
 		filter="url(#glow)"
 	/>
 
-	<!-- SET -->
 	<text
 		x="72"
 		y="128"
@@ -297,6 +341,144 @@ function createSetBrightnessSvg(
 		filter="url(#glow)"
 	>
 		SET
+	</text>
+</svg>`;
+
+	return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+function createBrightnessToggleSvg(
+	brightnessA: number,
+	brightnessB: number,
+	nextBrightness: number
+): string {
+	const accent = "#C45CFF";
+
+	const svg = `
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="144"
+	height="144"
+	viewBox="0 0 144 144"
+>
+	<defs>
+		<linearGradient
+			id="background"
+			x1="0"
+			y1="0"
+			x2="1"
+			y2="1"
+		>
+			<stop
+				offset="0%"
+				stop-color="#151019"
+			/>
+
+			<stop
+				offset="100%"
+				stop-color="#030204"
+			/>
+		</linearGradient>
+
+		<filter id="glow">
+			<feGaussianBlur
+				stdDeviation="2.5"
+				result="blur"
+			/>
+
+			<feMerge>
+				<feMergeNode in="blur"/>
+				<feMergeNode in="SourceGraphic"/>
+			</feMerge>
+		</filter>
+	</defs>
+
+	<rect
+		x="3"
+		y="3"
+		width="138"
+		height="138"
+		rx="18"
+		fill="url(#background)"
+		stroke="${accent}"
+		stroke-width="3"
+	/>
+
+	<!-- Sun -->
+	<g
+		stroke="#FFF9DA"
+		stroke-width="4"
+		stroke-linecap="round"
+		fill="none"
+		filter="url(#glow)"
+	>
+		<circle
+			cx="72"
+			cy="34"
+			r="12"
+		/>
+
+		<line x1="72" y1="13" x2="72" y2="18"/>
+		<line x1="72" y1="50" x2="72" y2="55"/>
+
+		<line x1="51" y1="34" x2="56" y2="34"/>
+		<line x1="88" y1="34" x2="93" y2="34"/>
+
+		<line x1="57" y1="19" x2="61" y2="23"/>
+		<line x1="83" y1="45" x2="87" y2="49"/>
+
+		<line x1="87" y1="19" x2="83" y2="23"/>
+		<line x1="61" y1="45" x2="57" y2="49"/>
+	</g>
+
+	<!-- A/B values -->
+	<text
+		x="72"
+		y="77"
+		text-anchor="middle"
+		fill="#FFFFFF"
+		font-family="Arial, sans-serif"
+		font-size="21"
+		font-weight="700"
+	>
+		${brightnessA}% ↔ ${brightnessB}%
+	</text>
+
+	<!-- Separator -->
+	<line
+		x1="20"
+		y1="88"
+		x2="124"
+		y2="88"
+		stroke="${accent}"
+		stroke-width="2"
+		opacity="0.9"
+		filter="url(#glow)"
+	/>
+
+	<!-- NEXT -->
+	<text
+		x="72"
+		y="108"
+		text-anchor="middle"
+		fill="${accent}"
+		font-family="Arial, sans-serif"
+		font-size="15"
+		font-weight="700"
+	>
+		NEXT
+	</text>
+
+	<text
+		x="72"
+		y="134"
+		text-anchor="middle"
+		fill="#FFFFFF"
+		font-family="Arial, sans-serif"
+		font-size="25"
+		font-weight="700"
+	>
+		${nextBrightness}%
 	</text>
 </svg>`;
 
@@ -337,6 +519,46 @@ export async function syncSetBrightnessKeys(): Promise<void> {
 			key.setImage(
 				createSetBrightnessSvg(
 					targetBrightness
+				)
+			)
+		);
+
+		updates.push(
+			key.setTitle("")
+		);
+	}
+
+	await Promise.all(updates);
+}
+
+export async function syncBrightnessToggleKeys(
+	currentBrightness: number
+): Promise<void> {
+	const updates: Promise<void>[] = [];
+
+	for (
+		const [
+			key,
+			{
+				brightnessA,
+				brightnessB,
+			},
+		]
+		of brightnessToggleKeys
+	) {
+		const nextBrightness =
+			getNextToggleBrightness(
+				currentBrightness,
+				brightnessA,
+				brightnessB
+			);
+
+		updates.push(
+			key.setImage(
+				createBrightnessToggleSvg(
+					brightnessA,
+					brightnessB,
+					nextBrightness
 				)
 			)
 		);

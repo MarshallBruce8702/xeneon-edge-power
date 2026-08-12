@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1"
+	/>
+
+	<title>XENEON EDGE Brightness Toggle</title>
+
+	<script src="sdpi-components.js"></script>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 16px;
+			font-family: Arial, sans-serif;
+			background: #1f1f1f;
+			color: #ffffff;
+		}
+
+		.header {
+			margin-bottom: 18px;
+		}
+
+		.title {
+			font-size: 16px;
+			font-weight: 700;
+			margin-bottom: 4px;
+		}
+
+		.subtitle {
+			font-size: 12px;
+			color: #b8b8b8;
+			line-height: 1.4;
+		}
+
+		.control-block {
+			margin-bottom: 16px;
+		}
+
+		.control-label {
+			font-size: 12px;
+			font-weight: 700;
+			margin-bottom: 8px;
+		}
+
+		.control-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.number-input {
+			width: 82px;
+			height: 34px;
+			box-sizing: border-box;
+			border-radius: 6px;
+			border: 1px solid #555555;
+			background: #2a2a2a;
+			color: #ffffff;
+			text-align: center;
+			font-size: 16px;
+			font-weight: 700;
+			outline: none;
+		}
+
+		.number-input:focus {
+			border-color: #c45cff;
+		}
+
+		.percent-symbol {
+			font-size: 14px;
+			color: #b8b8b8;
+		}
+
+		.value-row {
+			display: flex;
+			justify-content: space-between;
+			gap: 12px;
+			margin-top: 16px;
+		}
+
+		.value-box {
+			flex: 1;
+			text-align: center;
+			padding: 12px;
+			border-radius: 8px;
+			background: #292929;
+		}
+
+		.value-label {
+			font-size: 11px;
+			color: #b8b8b8;
+			margin-bottom: 4px;
+		}
+
+		.value-number {
+			font-size: 26px;
+			font-weight: 700;
+		}
+
+		.value-a {
+			color: #c45cff;
+		}
+
+		.value-b {
+			color: #ffffff;
+		}
+
+		.preview {
+			margin-top: 16px;
+			padding: 12px;
+			text-align: center;
+			border-radius: 8px;
+			background: #151019;
+			border: 1px solid #c45cff;
+		}
+
+		.preview-title {
+			font-size: 11px;
+			color: #b8b8b8;
+			margin-bottom: 6px;
+		}
+
+		.preview-value {
+			font-size: 20px;
+			font-weight: 700;
+			color: #c45cff;
+		}
+
+		.note {
+			margin-top: 14px;
+			font-size: 11px;
+			color: #9a9a9a;
+			line-height: 1.4;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header">
+		<div class="title">
+			Brightness Toggle A/B
+		</div>
+
+		<div class="subtitle">
+			Choose two exact brightness levels. Each press will toggle your XENEON EDGE between them.
+		</div>
+	</div>
+
+	<div class="control-block">
+		<div class="control-label">
+			Brightness A
+		</div>
+
+		<div class="control-row">
+			<input
+				id="brightnessANumber"
+				class="number-input"
+				type="number"
+				min="0"
+				max="100"
+				step="1"
+				value="25"
+			/>
+
+			<div class="percent-symbol">
+				%
+			</div>
+		</div>
+	</div>
+
+	<div class="control-block">
+		<div class="control-label">
+			Brightness B
+		</div>
+
+		<div class="control-row">
+			<input
+				id="brightnessBNumber"
+				class="number-input"
+				type="number"
+				min="0"
+				max="100"
+				step="1"
+				value="100"
+			/>
+
+			<div class="percent-symbol">
+				%
+			</div>
+		</div>
+	</div>
+
+	<div class="value-row">
+		<div class="value-box">
+			<div class="value-label">
+				Brightness A
+			</div>
+
+			<div
+				id="brightnessAValue"
+				class="value-number value-a"
+			>
+				25%
+			</div>
+		</div>
+
+		<div class="value-box">
+			<div class="value-label">
+				Brightness B
+			</div>
+
+			<div
+				id="brightnessBValue"
+				class="value-number value-b"
+			>
+				100%
+			</div>
+		</div>
+	</div>
+
+	<div class="preview">
+		<div class="preview-title">
+			Toggle
+		</div>
+
+		<div
+			id="togglePreview"
+			class="preview-value"
+		>
+			25% ↔ 100%
+		</div>
+	</div>
+
+	<div class="note">
+		Type any exact value from 0 to 100, or use the arrow controls on the number fields.
+		Each Brightness Toggle key stores its own A and B values independently.
+	</div>
+
+	<script>
+		const { streamDeckClient } = SDPIComponents;
+
+		const brightnessANumber =
+			document.getElementById("brightnessANumber");
+
+		const brightnessBNumber =
+			document.getElementById("brightnessBNumber");
+
+		const brightnessAValue =
+			document.getElementById("brightnessAValue");
+
+		const brightnessBValue =
+			document.getElementById("brightnessBValue");
+
+		const togglePreview =
+			document.getElementById("togglePreview");
+
+		function clampBrightness(
+			value,
+			fallback
+		) {
+			const parsed =
+				Number.parseInt(
+					value,
+					10
+				);
+
+			if (Number.isNaN(parsed)) {
+				return fallback;
+			}
+
+			return Math.max(
+				0,
+				Math.min(
+					100,
+					parsed
+				)
+			);
+		}
+
+		function updatePreview(
+			brightnessA,
+			brightnessB
+		) {
+			brightnessAValue.textContent =
+				`${brightnessA}%`;
+
+			brightnessBValue.textContent =
+				`${brightnessB}%`;
+
+			togglePreview.textContent =
+				`${brightnessA}% ↔ ${brightnessB}%`;
+		}
+
+		function setControls(
+			brightnessA,
+			brightnessB
+		) {
+			brightnessANumber.value =
+				String(brightnessA);
+
+			brightnessBNumber.value =
+				String(brightnessB);
+
+			updatePreview(
+				brightnessA,
+				brightnessB
+			);
+		}
+
+		function getCurrentValues() {
+			const brightnessA =
+				clampBrightness(
+					brightnessANumber.value,
+					25
+				);
+
+			const brightnessB =
+				clampBrightness(
+					brightnessBNumber.value,
+					100
+				);
+
+			return {
+				brightnessA,
+				brightnessB
+			};
+		}
+
+		async function saveSettings() {
+			const {
+				brightnessA,
+				brightnessB
+			} = getCurrentValues();
+
+			setControls(
+				brightnessA,
+				brightnessB
+			);
+
+			await streamDeckClient.setSettings({
+				brightnessA,
+				brightnessB
+			});
+		}
+
+		function updateFromInputs() {
+			const {
+				brightnessA,
+				brightnessB
+			} = getCurrentValues();
+
+			updatePreview(
+				brightnessA,
+				brightnessB
+			);
+		}
+
+		brightnessANumber.addEventListener(
+			"input",
+			updateFromInputs
+		);
+
+		brightnessBNumber.addEventListener(
+			"input",
+			updateFromInputs
+		);
+
+		brightnessANumber.addEventListener(
+			"change",
+			saveSettings
+		);
+
+		brightnessBNumber.addEventListener(
+			"change",
+			saveSettings
+		);
+
+		brightnessANumber.addEventListener(
+			"keydown",
+			async (event) => {
+				if (event.key === "Enter") {
+					await saveSettings();
+					brightnessANumber.blur();
+				}
+			}
+		);
+
+		brightnessBNumber.addEventListener(
+			"keydown",
+			async (event) => {
+				if (event.key === "Enter") {
+					await saveSettings();
+					brightnessBNumber.blur();
+				}
+			}
+		);
+
+		streamDeckClient.didReceiveSettings.subscribe(
+			(event) => {
+				const brightnessA =
+					clampBrightness(
+						event?.payload?.settings
+							?.brightnessA ?? 25,
+						25
+					);
+
+				const brightnessB =
+					clampBrightness(
+						event?.payload?.settings
+							?.brightnessB ?? 100,
+						100
+					);
+
+				setControls(
+					brightnessA,
+					brightnessB
+				);
+			}
+		);
+	</script>
+</body>
+</html>

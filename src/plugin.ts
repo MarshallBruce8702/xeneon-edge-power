@@ -4,6 +4,7 @@ import { XeneonEdgePower } from "./actions/power-toggle";
 import { BrightnessUp } from "./actions/brightness-up";
 import { BrightnessDown } from "./actions/brightness-down";
 import { SetBrightness } from "./actions/set-brightness";
+import { BrightnessToggle } from "./actions/brightness-toggle";
 
 streamDeck.logger.setLevel("trace");
 
@@ -21,6 +22,10 @@ streamDeck.actions.registerAction(
 
 streamDeck.actions.registerAction(
 	new SetBrightness()
+);
+
+streamDeck.actions.registerAction(
+	new BrightnessToggle()
 );
 
 streamDeck.connect();

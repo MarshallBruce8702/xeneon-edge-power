@@ -79,6 +79,24 @@
           "TitleAlignment": "middle"
         }
       ]
+    },
+
+    {
+      "Name": "Brightness Toggle",
+      "UUID": "com.marshallb.xeneon-edge-power.brightness-toggle",
+      "Icon": "imgs/actions/brightness-up/icon",
+      "Tooltip": "Toggle XENEON EDGE brightness between two levels.",
+      "PropertyInspectorPath": "ui/brightness-toggle.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Name": "Brightness Toggle",
+          "Image": "imgs/actions/brightness-up/icon",
+          "TitleAlignment": "middle"
+        }
+      ]
     }
   ],
 
