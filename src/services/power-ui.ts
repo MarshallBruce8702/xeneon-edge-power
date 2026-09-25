@@ -1,5 +1,7 @@
 import type { KeyAction } from "@elgato/streamdeck";
 
+import type { PowerStatus } from "./power-state";
+
 type PowerKeyType =
 	| "toggle"
 	| "on"
@@ -30,25 +32,29 @@ export function unregisterPowerKey(
 }
 
 export async function syncPowerKeys(
-	powerIsOn: boolean
+	powerStatus: PowerStatus
 ): Promise<void> {
 	const updates: Promise<void>[] = [];
 
 	for (const [key, type] of powerKeys) {
 		if (type === "toggle") {
-			updates.push(
-				key.setState(
-					powerIsOn
-						? STATE_ON
-						: STATE_OFF
-				)
-			);
+			if (powerStatus !== "unknown") {
+				updates.push(
+					key.setState(
+						powerStatus === "on"
+							? STATE_ON
+							: STATE_OFF
+					)
+				);
+			}
 
 			updates.push(
 				key.setTitle(
-					powerIsOn
-						? "EDGE\nON"
-						: "EDGE\nOFF"
+					powerStatus === "on"
+						? "TOGGLE\nEDGE ON"
+						: powerStatus === "off"
+							? "TOGGLE\nEDGE OFF"
+							: "TOGGLE\nEDGE ?"
 				)
 			);
 		}
@@ -56,9 +62,11 @@ export async function syncPowerKeys(
 		if (type === "on") {
 			updates.push(
 				key.setTitle(
-					powerIsOn
+					powerStatus === "on"
 						? "POWER\nON"
-						: "TURN\nON"
+						: powerStatus === "off"
+							? "TURN\nON"
+							: "POWER\n?"
 				)
 			);
 		}
@@ -66,9 +74,11 @@ export async function syncPowerKeys(
 		if (type === "off") {
 			updates.push(
 				key.setTitle(
-					powerIsOn
+					powerStatus === "on"
 						? "TURN\nOFF"
-						: "POWER\nOFF"
+						: powerStatus === "off"
+							? "POWER\nOFF"
+							: "POWER\n?"
 				)
 			);
 		}

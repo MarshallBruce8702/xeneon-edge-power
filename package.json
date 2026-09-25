@@ -1,6 +1,7 @@
 {
     "scripts": {
         "build": "rollup -c",
+        "test": "node --test tests/*.test.ts",
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.marshallb.xeneon-edge-power\""
     },
     "type": "module",

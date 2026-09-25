@@ -8,11 +8,17 @@ import {
 } from "@elgato/streamdeck";
 
 import {
-	getPowerState,
-	setPowerState,
-	POWER_ON,
-	POWER_OFF,
+	getRawPowerState,
+	turnPowerOff,
+	turnPowerOn,
 } from "../services/xeneon-edge";
+
+import {
+	classifyPowerState,
+	POWER_OFF_COMMAND,
+	POWER_ON_COMMAND,
+	resolvePowerCommand,
+} from "../services/power-state";
 
 import {
 	registerPowerKey,
@@ -36,11 +42,13 @@ export class XeneonEdgePower extends SingletonAction {
 		);
 
 		try {
-			const powerState =
-				getPowerState();
+			const powerStatus =
+				classifyPowerState(
+					getRawPowerState()
+				);
 
 			await syncPowerKeys(
-				powerState === POWER_ON
+				powerStatus
 			);
 		} catch (error) {
 			console.error(
@@ -48,8 +56,8 @@ export class XeneonEdgePower extends SingletonAction {
 				error
 			);
 
-			await key.setTitle(
-				"EDGE\n?"
+			await syncPowerKeys(
+				"unknown"
 			);
 		}
 	}
@@ -70,20 +78,43 @@ export class XeneonEdgePower extends SingletonAction {
 		const key = ev.action as KeyAction;
 
 		try {
-			const currentState =
-				getPowerState();
+			const powerStatus =
+				classifyPowerState(
+					getRawPowerState()
+				);
 
-			const nextState =
-				currentState === POWER_ON
-					? POWER_OFF
-					: POWER_ON;
+			const command =
+				resolvePowerCommand(
+					"toggle",
+					powerStatus
+				);
 
-			setPowerState(
-				nextState
-			);
+			if (command === null) {
+				console.error(
+					"Unable to toggle XENEON EDGE from an unknown power state."
+				);
+
+				await syncPowerKeys(
+					"unknown"
+				);
+
+				await key.showAlert();
+
+				return;
+			}
+
+			if (command === POWER_ON_COMMAND) {
+				turnPowerOn();
+			}
+
+			if (command === POWER_OFF_COMMAND) {
+				turnPowerOff();
+			}
 
 			await syncPowerKeys(
-				nextState === POWER_ON
+				command === POWER_ON_COMMAND
+					? "on"
+					: "off"
 			);
 		} catch (error) {
 			console.error(
@@ -91,8 +122,8 @@ export class XeneonEdgePower extends SingletonAction {
 				error
 			);
 
-			await key.setTitle(
-				"EDGE\nERROR"
+			await syncPowerKeys(
+				"unknown"
 			);
 
 			await key.showAlert();

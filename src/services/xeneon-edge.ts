@@ -1,5 +1,11 @@
 import { createRequire } from "node:module";
 
+import {
+	POWER_OFF_COMMAND,
+	POWER_ON_COMMAND,
+	type PowerCommand,
+} from "./power-state";
+
 const require = createRequire(import.meta.url);
 
 type DdcciModule = {
@@ -16,9 +22,6 @@ const XENEON_HARDWARE_ID = "CRXED00";
 const POWER_VCP = 0xD6;
 const BRIGHTNESS_VCP = 0x10;
 
-export const POWER_ON = 1;
-export const POWER_OFF = 5;
-
 export function findXeneonEdge(): string {
 	ddcci._refresh();
 
@@ -33,7 +36,7 @@ export function findXeneonEdge(): string {
 	return monitor;
 }
 
-export function getPowerState(): number {
+export function getRawPowerState(): number {
 	const monitor = findXeneonEdge();
 
 	const [currentValue] = ddcci._getVCP(
@@ -44,13 +47,27 @@ export function getPowerState(): number {
 	return currentValue;
 }
 
-export function setPowerState(value: number): void {
+function setPowerCommand(
+	command: PowerCommand
+): void {
 	const monitor = findXeneonEdge();
 
 	ddcci._setVCP(
 		monitor,
 		POWER_VCP,
-		value
+		command
+	);
+}
+
+export function turnPowerOn(): void {
+	setPowerCommand(
+		POWER_ON_COMMAND
+	);
+}
+
+export function turnPowerOff(): void {
+	setPowerCommand(
+		POWER_OFF_COMMAND
 	);
 }
 

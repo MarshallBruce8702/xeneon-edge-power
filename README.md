@@ -1,55 +1,81 @@
 # XENEON EDGE Power
 
-[![Release](https://img.shields.io/badge/release-v1.1.0.0-blue.svg)](https://github.com/MarshallBruce8702/xeneon-edge-power/releases/tag/v1.1.0.0)
+[![Release](https://img.shields.io/badge/release-v1.1.1.0-blue.svg)](https://github.com/MarshallBruce8702/xeneon-edge-power/releases/tag/v1.1.1.0)
 ![Platform](https://img.shields.io/badge/platform-Windows-0078D6.svg)
 ![Stream Deck](https://img.shields.io/badge/Stream%20Deck-7.1%2B-00AEEF.svg)
 ![DDC/CI](https://img.shields.io/badge/DDC%2FCI-supported-success.svg)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Control your **CORSAIR XENEON EDGE** directly from an **Elgato Stream Deck** using DDC/CI.
+Control the power and brightness of a **CORSAIR XENEON EDGE** directly from an **Elgato Stream Deck** using DDC/CI.
 
-XENEON EDGE Power v1.1.0.0 expands the original Power Toggle plugin with dedicated power controls, real-time brightness controls, configurable brightness presets, synchronized key states, and per-key Property Inspector settings.
+The plugin includes seven actions, synchronized key displays, configurable brightness presets, and local Property Inspectors. End users do not need to install Node.js or run PowerShell, batch files, or third-party monitor utilities.
 
-No PowerShell scripts, BAT files, Twinkle Tray, manual monitor IDs, or Node.js installation are required on the end user's PC.
+## Requirements
 
----
+- Windows 10 or later
+- Elgato Stream Deck 7.1 or later
+- CORSAIR XENEON EDGE with DDC/CI available
 
-## What's New in v1.1.0.0
+## Actions
 
-Version 1.1.0.0 is a major expansion over the original v1.0.0 release.
+### 1. Power Toggle
 
-The first release only provided:
+A single key alternates the XENEON EDGE between ON and reversible OFF states and displays the current state.
 
-- Power Toggle
+This is the recommended action when both power states should be controlled from one Stream Deck key.
 
-Version 1.1.0.0 now includes:
+### 2. Power ON
 
-- Power Toggle
-- Power ON
-- Power OFF
-- Brightness +
-- Brightness -
-- Set Brightness
-- Brightness Toggle A/B
-- Dynamic brightness key graphics
-- Synchronized power states
-- Synchronized brightness displays
-- Per-key brightness configuration
-- Local/offline Property Inspector support
+A dedicated action that turns the XENEON EDGE on. If the display is already on, no additional power command is sent.
 
----
+### 3. Power OFF
 
-# Actions
+A dedicated action that turns the XENEON EDGE off reversibly, keeping software Power ON available afterward. If the display is already in a known non-ON state, no additional power command is sent.
 
-## 1. Power Toggle
+### 4. Brightness +
 
-Power Toggle switches the XENEON EDGE between ON and OFF.
+Increases brightness by 10 points and updates registered brightness keys.
 
-The action reads the real power state of the monitor and updates the Stream Deck key accordingly.
+### 5. Brightness -
 
-### Behavior
+Decreases brightness by 10 points and updates registered brightness keys.
 
-If the monitor is ON:
+### 6. Set Brightness
 
-```text
-EDGE ON
+Sets brightness to a specific value from 0 to 100. Select the target value in the action's Property Inspector.
+
+### 7. Brightness Toggle
+
+Alternates between two configurable brightness levels. The default values are 25 and 100, and both can be changed in the action's Property Inspector.
+
+## Installation
+
+1. Download `com.marshallb.xeneon-edge-power.streamDeckPlugin` from the GitHub release.
+2. Open the downloaded package and approve installation in Stream Deck.
+3. Drag any XENEON EDGE Power action onto a Stream Deck key.
+
+## Building from source
+
+Install the project dependencies and build the plugin:
+
+```powershell
+npm ci
+npm run build
+```
+
+Validate the generated plugin directory with the local Stream Deck CLI:
+
+```powershell
+streamdeck validate --no-update-check .\com.marshallb.xeneon-edge-power.sdPlugin
+```
+
+## Notes
+
+- Power and brightness changes are sent directly to the monitor over DDC/CI.
+- Power keys synchronize their displayed state while they are active in Stream Deck.
+- Brightness values are constrained to the range reported by the monitor.
+- If the monitor cannot be read or reports an unsupported power value, the affected key shows an unknown state and does not send a power command.
+
+## License
+
+Licensed under the [MIT License](LICENSE).

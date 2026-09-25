@@ -8,11 +8,15 @@ import {
 } from "@elgato/streamdeck";
 
 import {
-	getPowerState,
-	setPowerState,
-	POWER_ON,
-	POWER_OFF,
+	getRawPowerState,
+	turnPowerOff,
 } from "../services/xeneon-edge";
+
+import {
+	classifyPowerState,
+	POWER_OFF_COMMAND,
+	resolvePowerCommand,
+} from "../services/power-state";
 
 import {
 	registerPowerKey,
@@ -36,11 +40,13 @@ export class XeneonEdgePowerOff extends SingletonAction {
 		);
 
 		try {
-			const powerState =
-				getPowerState();
+			const powerStatus =
+				classifyPowerState(
+					getRawPowerState()
+				);
 
 			await syncPowerKeys(
-				powerState === POWER_ON
+				powerStatus
 			);
 		} catch (error) {
 			console.error(
@@ -48,8 +54,8 @@ export class XeneonEdgePowerOff extends SingletonAction {
 				error
 			);
 
-			await key.setTitle(
-				"POWER\n?"
+			await syncPowerKeys(
+				"unknown"
 			);
 		}
 	}
@@ -70,17 +76,37 @@ export class XeneonEdgePowerOff extends SingletonAction {
 		const key = ev.action as KeyAction;
 
 		try {
-			const currentState =
-				getPowerState();
-
-			if (currentState !== POWER_OFF) {
-				setPowerState(
-					POWER_OFF
+			const powerStatus =
+				classifyPowerState(
+					getRawPowerState()
 				);
+
+			if (powerStatus === "unknown") {
+				console.error(
+					"Unable to turn off XENEON EDGE from an unknown power state."
+				);
+
+				await syncPowerKeys(
+					"unknown"
+				);
+
+				await key.showAlert();
+
+				return;
+			}
+
+			const command =
+				resolvePowerCommand(
+					"off",
+					powerStatus
+				);
+
+			if (command === POWER_OFF_COMMAND) {
+				turnPowerOff();
 			}
 
 			await syncPowerKeys(
-				false
+				"off"
 			);
 		} catch (error) {
 			console.error(
@@ -88,8 +114,8 @@ export class XeneonEdgePowerOff extends SingletonAction {
 				error
 			);
 
-			await key.setTitle(
-				"POWER\nERROR"
+			await syncPowerKeys(
+				"unknown"
 			);
 
 			await key.showAlert();

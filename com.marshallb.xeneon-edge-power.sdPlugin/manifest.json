@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "Name": "XENEON EDGE Power",
-  "Version": "1.1.0.0",
+  "Version": "1.1.1.0",
   "Author": "MarshallB",
   "Actions": [
     {
@@ -16,12 +16,12 @@
       "States": [
         {
           "Name": "On",
-          "Image": "imgs/actions/power/key-on",
+          "Image": "imgs/actions/power-toggle/key-on",
           "TitleAlignment": "middle"
         },
         {
           "Name": "Off",
-          "Image": "imgs/actions/power/key-off",
+          "Image": "imgs/actions/power-toggle/key-off",
           "TitleAlignment": "middle"
         }
       ]
@@ -37,7 +37,7 @@
       "States": [
         {
           "Name": "Brightness Up",
-          "Image": "imgs/actions/brightness-up/icon",
+          "Image": "imgs/actions/brightness-up/key",
           "TitleAlignment": "middle"
         }
       ]
@@ -53,7 +53,7 @@
       "States": [
         {
           "Name": "Brightness Down",
-          "Image": "imgs/actions/brightness-down/icon",
+          "Image": "imgs/actions/brightness-down/key",
           "TitleAlignment": "middle"
         }
       ]
@@ -70,7 +70,7 @@
       "States": [
         {
           "Name": "Set Brightness",
-          "Image": "imgs/actions/set-brightness/icon",
+          "Image": "imgs/actions/set-brightness/key",
           "TitleAlignment": "middle"
         }
       ]
@@ -78,7 +78,7 @@
     {
       "Name": "Brightness Toggle",
       "UUID": "com.marshallb.xeneon-edge-power.brightness-toggle",
-      "Icon": "imgs/actions/brightness-up/icon",
+      "Icon": "imgs/actions/brightness-toggle/icon",
       "Tooltip": "Toggle XENEON EDGE brightness between two levels.",
       "PropertyInspectorPath": "ui/brightness-toggle.html",
       "Controllers": [
@@ -87,7 +87,7 @@
       "States": [
         {
           "Name": "Brightness Toggle",
-          "Image": "imgs/actions/brightness-up/icon",
+          "Image": "imgs/actions/brightness-toggle/key",
           "TitleAlignment": "middle"
         }
       ]
@@ -129,7 +129,7 @@
   "CategoryIcon": "imgs/plugin/category-icon",
   "CodePath": "bin/plugin.js",
   "Description": "Control the power and brightness of your XENEON EDGE monitor directly from Stream Deck using DDC/CI.",
-  "Icon": "imgs/plugin/marketplace",
+  "Icon": "imgs/plugin/plugin-icon",
   "SDKVersion": 3,
   "Software": {
     "MinimumVersion": "7.1"
